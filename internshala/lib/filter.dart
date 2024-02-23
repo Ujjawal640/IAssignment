@@ -28,9 +28,11 @@ class _filterState extends State<filter> {
   }
 
   void _updateDataAndPop() {
-    updatedinternships=filter.where((e){
-      if (profilefields.contains(e["profile_name"]) || e["duration"] == duration ||  e["location_names"].any((city) => cityfields.contains(city))) {
-       return true;
+    updatedinternships = filter.where((e) {
+      if (profilefields.contains(e["profile_name"]) ||
+          e["duration"] == duration ||
+          e["location_names"].any((city) => cityfields.contains(city))) {
+        return true;
       }
       return false;
     }).toList();
@@ -45,109 +47,213 @@ class _filterState extends State<filter> {
     return Scaffold(
         appBar: AppBar(title: Text("Filter")),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Column(
-                children: [
-                  Row(
-                    children: [Text("Profile")],
-                  ),
-                  Row(
-                    children: [
-                      TextButton.icon(
-                          onPressed: () async {
-                            final pselected = await Navigator.of(context)
-                                .push(MaterialPageRoute(
-                                    builder: ((context) => filterindividual(
-                                          field: 'Profiles',
-                                          fields: ["Data Science", "web", "mobile"],
-                                        ))));
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [Text("Profile",style: TextStyle(fontSize: 20),)],
+                    ),
+                    Row(
+                      children: profilefields.isEmpty
+                          ? [
+                              TextButton.icon(
+                                  onPressed: () async {
+                                    final pselected =
+                                        await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: ((context) =>
+                                                    filterindividual(
+                                                      field: 'Profiles',
+                                                      fields: [
+                                                        "Data Science",
+                                                        "Administration",
+                                                        "Business Analytics",
+                                                        "Android App Development",
+                                                        "Product Management"
+                                                      ],
+                                                    ))));
 
-                            if (pselected != null) {
-                              profilefields = pselected;
-                            }
-                          },
-                          icon: Icon(Icons.add),
-                          label: Text("profile"))
-                    ],
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [Text("City")],
-                  ),
-                  Row(
-                    children: [
-                      TextButton.icon(
-                          onPressed: () async {
-                            final pselected = await Navigator.of(context)
-                                .push(MaterialPageRoute(
-                                    builder: ((context) => filterindividual(
-                                          field: 'Cities',
-                                          fields: ["Delhi"],
-                                        ))));
-
-                            if (pselected != null) {
-                              cityfields = pselected;
-                            }
-                          },
-                          icon: Icon(Icons.add),
-                          label: Text("City"))
-                    ],
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [Text("MAximum")],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8.0, right: 16),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              border: Border.all(
-                                  color: Colors
-                                      .grey), // Define your border properties here
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                value: duration,
-                                isDense: true,
-                                isExpanded: true,
-                                items: [
-                                  DropdownMenuItem(
-                                    child: Text("2"),
-                                    value: "2",
+                                    if (pselected != null) {
+                                      setState(() {
+                                        profilefields = pselected;
+                                      });
+                                    }
+                                  },
+                                  icon: Icon(Icons.add),
+                                  label: Text("Profile",style: TextStyle(fontSize: 18)))
+                            ]
+                          : profilefields.map((e) {
+                              return Card(
+                                color: Colors.blue,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left:8.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            e,
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                profilefields.remove(e);
+                                              });
+                                            },
+                                            icon: Icon(Icons.close),
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  DropdownMenuItem(
-                                    child: Text("3"),
-                                    value: "3",
-                                  )
-                                ], // Add your dropdown items here
-                                onChanged: (value) {
+                                ),
+                              );
+                            }).toList(),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0,bottom: 8),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [Text("City",style: TextStyle(fontSize: 20))],
+                      ),
+                      Row(
+                        children:cityfields.isEmpty? [
+                          TextButton.icon(
+                              onPressed: () async {
+                                final pselected = await Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: ((context) => filterindividual(
+                                              field: 'Cities',
+                                              fields: ["Delhi","Munnar","Lucknow","Tarn Taran","Banga (Philippines)","Parbhani","Kera"],
+                                            ))));
+
+                                if (pselected != null) {
                                   setState(() {
-                                    duration = value;
+                                                                    cityfields = pselected;
+
                                   });
-                                },
+                                }
+                              },
+                              icon: Icon(Icons.add),
+                              label: Text("City",style: TextStyle(fontSize: 18)))
+                        ]
+                        :
+                        cityfields.map((e){
+                           return Card(
+                                  color: Colors.blue,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:8.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              e,
+                                              style: TextStyle(color: Colors.white),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  cityfields.remove(e);
+                                                });
+                                              },
+                                              icon: Icon(Icons.close),
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                        }).toList()
+                        ,
+                      )
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Row(
+                      children: [Text("Maximum Duration(in months)",style: TextStyle(fontSize: 20))],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 4, right: 16),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4)),
+                                border: Border.all(
+                                    color: Colors
+                                        .grey), // Define your border properties here
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  iconSize:40,
+                                 // itemHeight:20,
+                                  value: duration,
+                                  isDense: true,
+                                  isExpanded: true,
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text("1"),
+                                      value: "1",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("2"),
+                                      value: "2",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("3"),
+                                      value: "3",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("4"),
+                                      value: "",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("5"),
+                                      value: "5",
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("6"),
+                                      value: "6",
+                                    ),
+                                  ], // Add your dropdown items here
+                                  onChanged: (value) {
+                                    setState(() {
+                                      duration = value;
+                                    });
+                                  },
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: BottomAppBar(

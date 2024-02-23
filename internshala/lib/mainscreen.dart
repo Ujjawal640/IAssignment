@@ -43,6 +43,9 @@ class _mainscreenState extends State<mainscreen> {
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.search))
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -106,7 +109,7 @@ class _mainscreenState extends State<mainscreen> {
               label: "Jobs"),
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.tv_off_outlined,
+                Icons.tv,
                 color: Colors.black,
               ),
               label: "Courses")

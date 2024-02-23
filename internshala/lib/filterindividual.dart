@@ -40,16 +40,19 @@ class _filterindividual extends State<filterindividual> {
     return Scaffold(
       appBar: AppBar(
         title: Text(heading),
-        actions: [OutlinedButton(
-                onPressed: () {},
-                child: Text("Clear"),
-                style: OutlinedButton.styleFrom(
-                  side:  BorderSide(color: Colors.blueAccent),
-                    shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                )),
-              ),
-          OutlinedButton(
+        actions: [Row(
+          children: [
+            OutlinedButton(
+                    onPressed: () {},
+                    child: Text("Clear"),
+                    style: OutlinedButton.styleFrom(
+                      side:  BorderSide(color: Colors.blueAccent),
+                        shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    )),
+                  ),
+                  SizedBox(width: 10,),
+                  OutlinedButton(
                 onPressed: () {
                   _updateDataAndPop();
                 },
@@ -63,6 +66,9 @@ class _filterindividual extends State<filterindividual> {
                       borderRadius: BorderRadius.circular(8.0),
                     )),
               ),
+          ],
+        ),
+          
         ],
       ),
       body: Column(

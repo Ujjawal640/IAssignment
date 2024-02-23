@@ -53,49 +53,48 @@ class _searchscreenState extends State<searchscreen> {
         children: [
           Container(
             height: MediaQuery.of(context).size.height * 0.1,
-          
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    OutlinedButton.icon(
+                        onPressed: () async {
+                          final updatedinternships = await Navigator.of(context)
+                              .push(MaterialPageRoute(
+                                  builder: ((context) =>
+                                      filter(internships: internships))));
+
+                          if (updatedinternships != null) {
+                            print("search $updatedinternships");
+                            setState(() {
+                              internships = updatedinternships;
+                            });
+                          }
+                        },
+                        icon: Icon(
+                          Icons.filter_alt_outlined,
+                        ),
+                        label: Text("Filters"),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                              color: Colors.blue), // Change outline color here
+                        ))
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      OutlinedButton.icon(
-                          onPressed: ()async {
-                            final updatedinternships=await Navigator.of(context).push(MaterialPageRoute(
-                              builder: ((context) => filter(internships:internships))));
-
-                              if(updatedinternships!=null){
-                                print("search $updatedinternships");
-                                setState(() {
-                                  internships=updatedinternships;
-                                });
-                              }
-                          },
-                          icon: Icon(
-                            Icons.filter_alt_outlined,
-                          ),
-                          label: Text("Filters"),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                                color:
-                                    Colors.blue), // Change outline color here
-                          ))
-                    ],
+                    children: [Text("${internships.length} total internships")],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top:8,bottom: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [Text("${internships.length} total internships")],
-                    ),
-                  )
-                ],
-              ),
-            
+                )
+              ],
+            ),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -110,6 +109,7 @@ class _searchscreenState extends State<searchscreen> {
                 String label = e["labels"][0]["label_value"][0];
                 String start = e["start_date"];
                 String duration = e["duration"];
+                bool wfh = e["work_from_home"];
                 return InkWell(
                   child: Card(
                     color: Colors.white,
@@ -117,18 +117,21 @@ class _searchscreenState extends State<searchscreen> {
                       borderRadius: BorderRadius.zero,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(top:8.0,bottom: 8.0,left: 8.0),
+                      padding: const EdgeInsets.only(
+                          top: 8.0, bottom: 8.0, left: 8.0),
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top:8.0,bottom: 8.0),
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 8.0),
                             child: Row(
                               children: [
-                                 Text(
-                                    title,
-                                    style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),
-                                  ),
-                                
+                                Text(
+                                  title,
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ],
                             ),
                           ),
@@ -137,61 +140,90 @@ class _searchscreenState extends State<searchscreen> {
                               SizedBox(
                                   width: 100,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 4.0,bottom:8.0),
+                                    padding: const EdgeInsets.only(
+                                        left: 4.0, bottom: 8.0),
                                     child: Text(
                                       company,
-                                      style: TextStyle(color: Colors.grey,fontSize: 15),
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 15),
                                     ),
                                   ))
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top:16.0,bottom: 16.0),
+                            padding:
+                                const EdgeInsets.only(top: 16.0, bottom: 16.0),
                             child: Row(
-                              children: [
-                                Icon(Icons.location_on_outlined),
-                                Row(
-                                    children: locations.map((e) {
-                                  return Row(
-                                    children: [
-                                      Text("$e, ",style: TextStyle(fontSize: 20),),
+                              children: wfh
+                                  ? [
+                                      Icon(Icons.home),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Work From Home ",
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                    ]
+                                  : [
+                                      Icon(Icons.location_on_outlined),
+                                      Row(children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${locations.join(', ')}",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                      ]),
                                     ],
-                                  );
-                                }).toList()),
-                              ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top:16.0,bottom: 16.0),
+                            padding:
+                                const EdgeInsets.only(top: 16.0, bottom: 16.0),
                             child: Row(
                               children: [
                                 Icon(Icons.play_circle_outline_outlined),
                                 Row(
                                   children: [
-                                    Text(" $start ",style: TextStyle(fontSize: 20)),
+                                    Text(" $start ",
+                                        style: TextStyle(fontSize: 20)),
                                   ],
                                 ),
                                 Row(
                                   children: [
                                     SizedBox(width: 15),
-                                    Icon(Icons.calendar_today_outlined , size: 20,),
-                                    Text(" $duration",style: TextStyle(fontSize: 20)),
+                                    Icon(
+                                      Icons.calendar_today_outlined,
+                                      size: 20,
+                                    ),
+                                    Text(" $duration",
+                                        style: TextStyle(fontSize: 20)),
                                   ],
                                 )
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top:16.0,bottom: 16.0),
+                            padding:
+                                const EdgeInsets.only(top: 16.0, bottom: 16.0),
                             child: Row(
                               children: [
-                                FaIcon(FontAwesomeIcons.moneyBill , size: 15,),
-                                Text("  ₹ $salary /$scale",style: TextStyle(fontSize: 20))
+                                FaIcon(
+                                  FontAwesomeIcons.moneyBill,
+                                  size: 15,
+                                ),
+                                Text("  ₹ $salary /$scale",
+                                    style: TextStyle(fontSize: 20))
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top:16.0,bottom: 16.0),
+                            padding:
+                                const EdgeInsets.only(top: 16.0, bottom: 16.0),
                             child: Row(
                               children: [
                                 Container(
@@ -200,13 +232,15 @@ class _searchscreenState extends State<searchscreen> {
                                       padding: const EdgeInsets.all(5.0),
                                       child: Text(
                                         label,
-                                        style: TextStyle(color: Colors.grey[800],fontSize: 15),
+                                        style: TextStyle(
+                                            color: Colors.grey[800],
+                                            fontSize: 15),
                                       ),
                                     ))
                               ],
                             ),
                           ),
-                          Row( 
+                          Row(
                             children: [
                               Expanded(
                                   child: Divider(
@@ -219,7 +253,13 @@ class _searchscreenState extends State<searchscreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: [Text("View details",style: TextStyle(color: Colors.blueAccent,fontSize: 20),)],
+                              children: [
+                                Text(
+                                  "View details",
+                                  style: TextStyle(
+                                      color: Colors.blueAccent, fontSize: 20),
+                                )
+                              ],
                             ),
                           )
                         ],

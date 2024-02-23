@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internshala/mainscreen.dart';
+import 'package:internshala/splash_screen.dart';
 
 void main() {
   runApp( MyApp());
@@ -23,7 +24,7 @@ class _MyAppState extends State<MyApp> {
 
         
       ),
-      home: const mainscreen(),
+      home:  splash_screen(),
     );
   }
 }
